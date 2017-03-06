@@ -1,10 +1,29 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
+import router from '../router'
+import { Notification } from 'element-ui'
 
 Vue.use(VueResource);
 const hostUrl="http://0.0.0.0:3000"
 
 function api(){}
+Vue.http.interceptors.push(function(request, next) {
+    // modify headers
+  request.params.access_token=window.localStorage.getItem('token');
+
+  // continue to next interceptor
+  next(function(response){
+    //   console.log(response);
+      if(response.status=='401' && (response.url.indexOf('/api/login')==-1) && (response.url.indexOf('/api/signup')==-1)){
+        //   console.log("bad")
+        Notification.error({
+            message:"未登录或token失效",
+            duration:2000
+        })
+        router.replace({path:'/login'});
+      }
+  });
+});
 
 api.Signup=function(body){
     return Vue.http.post(hostUrl+'/api/Users',body)
@@ -12,15 +31,21 @@ api.Signup=function(body){
 api.UserLogin=function(body){
     return Vue.http.post(hostUrl+'/api/Users/login',body);
 }
-api.Logout = function(query){
-    return Vue.http.post(hostUrl+'/api/Users/logout',{},query)
+api.Logout = function(){
+    return Vue.http.post(hostUrl+'/api/Users/logout');
 }
-api.GetUserInfo=function(userId,token){
-    return Vue.http.get(hostUrl+'/api/Users/'+userId,{
-        params:{
-            'access_token':token
-        }
-    })
+api.GetUserInfo=function(userId){
+    return Vue.http.get(hostUrl+'/api/Users/'+userId)
+}
+api.GetBookmarks=function(params){
+    return Vue.http.get(hostUrl+'/api/bookmarks/list',params)
+}
+api.CreateBookmark=function(body){
+    body.userId=window.localStorage.getItem('userId');
+    return Vue.http.post(hostUrl+'/api/bookmarks',body);
+}
+api.GetBookmarksCount=function(){
+    return Vue.http.get(hostUrl+'/api/bookmarks/count')
 }
 export default api;
 
