@@ -17,16 +17,17 @@
         </el-row>
 
         <template>
-            <el-table :data="bookmarks" border style="width:100%">
-                <el-table-column fixed prop="createTime" label="Date"></el-table-column>
+            <el-table :data="bookmarks" border style="width:100%" stripe>
+                <el-table-column prop="id" label="ID" width="80px"></el-table-column>
+                <el-table-column prop="createTime" label="Date"></el-table-column>
                 <el-table-column prop="name" label="Name" width="120"></el-table-column>
                 <el-table-column prop="content" label="Contents"></el-table-column>
                 <el-table-column prop="userId" label="Owner"></el-table-column>
                 <el-table-column prop="type" label="Type"></el-table-column>
                 <el-table-column label="Operations">
                     <template scope="scope">
-                        <el-button @click="edit(scope.$index,bookmarks)" type="text" size="small">Edit</el-button>
-                        <el-button type="text" size="small">Delete</el-button>
+                        <el-button @click="edit(scope.$index,bookmarks)" type="text" size="small" v-show="bookmarks[scope.$index].userId==userId">Edit</el-button>
+                        <el-button type="text" size="small" @click="deleteBookmark(bookmarks[scope.$index].id)" v-show="bookmarks[scope.$index].userId==userId">Delete</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -158,6 +159,10 @@
                     limit: this.page.size,
                     skip: this.page.size * (this.page.currentPage - 1)
                 });
+            },
+            deleteBookmark(id){
+                console.log(id);
+                this.$store.dispatch('deleteBookmark',id)
             }
         },
         components: {
