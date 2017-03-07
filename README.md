@@ -1,4 +1,4 @@
-# elvisknight-front-vue2
+# vue-bookmark-demo
 
 > A Vue.js project
 

@@ -14,7 +14,6 @@ Vue.http.interceptors.push(function (request, next) {
 
     // continue to next interceptor
     next(function (response) {
-        //   console.log(response);
         if (response.status == '401' && (response.url.indexOf('/api/login') == -1) && (response.url.indexOf('/api/signup') == -1)) {
             //   console.log("bad")
             Notification.error({
@@ -22,6 +21,11 @@ Vue.http.interceptors.push(function (request, next) {
                 duration: 2000
             })
             router.replace({ path: '/login' });
+        } else if (!response.ok) {
+            Notification.error({
+                message: response.statusText,
+                duration: 500
+            })
         }
     });
 });
@@ -51,8 +55,8 @@ api.GetBookmarksCount = function (params) {
 api.EditBookmark = function (body) {
     return Vue.http.put(hostUrl + '/api/bookmarks/' + body.id, body);
 }
-api.DeleteBookmark = function(id){
-    return Vue.http.delete(hostUrl+'/api/bookmarks/'+id);
+api.DeleteBookmark = function (id) {
+    return Vue.http.delete(hostUrl + '/api/bookmarks/' + id);
 }
 export default api;
 

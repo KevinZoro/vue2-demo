@@ -18,16 +18,44 @@
 
         <template>
             <el-table :data="bookmarks" border style="width:100%" stripe>
+                <el-table-column type="expand">
+                    <template scope="props">
+                        <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="ID">
+                                <span>{{ props.row.id }}</span>
+                            </el-form-item>
+                            <el-form-item label="Name">
+                                <span>{{ props.row.name }}</span>
+                            </el-form-item>
+                            <el-form-item label="Url">
+                                <span>{{ props.row.content }}</span>
+                            </el-form-item>
+                            <el-form-item label="Notes">
+                                <span>{{ props.row.notes }}</span>
+                            </el-form-item>
+                            <el-form-item label="CreateTime">
+                                <span>{{ props.row.createTime }}</span>
+                            </el-form-item>
+                            <el-form-item label="Owner">
+                                <span>{{ props.row.userId }}</span>
+                            </el-form-item>
+                            <el-form-item label="Type">
+                                <span>{{ props.row.type }}</span>
+                            </el-form-item>
+
+                            </el-form-item>
+                        </el-form>
+                    </template>
+                </el-table-column>
+
                 <el-table-column prop="id" label="ID" width="80px"></el-table-column>
-                <el-table-column prop="createTime" label="Date"></el-table-column>
                 <el-table-column prop="name" label="Name" width="120"></el-table-column>
                 <el-table-column prop="content" label="Contents"></el-table-column>
-                <el-table-column prop="userId" label="Owner"></el-table-column>
                 <el-table-column prop="type" label="Type"></el-table-column>
                 <el-table-column label="Operations">
                     <template scope="scope">
-                        <el-button @click="edit(scope.$index,bookmarks)" type="text" size="small" v-show="bookmarks[scope.$index].userId==userId">Edit</el-button>
-                        <el-button type="text" size="small" @click="deleteBookmark(bookmarks[scope.$index].id)" v-show="bookmarks[scope.$index].userId==userId">Delete</el-button>
+                        <el-button @click="edit(scope.row)" type="text" size="small" v-show="scope.row.userId==userId">Edit</el-button>
+                        <el-button type="text" size="small" @click="deleteBookmark(scope.row.id)" v-show="scope.row.userId==userId">Delete</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -43,6 +71,9 @@
                 </el-form-item>
                 <el-form-item label="Content">
                     <el-input v-model="newBookmark.content" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="Notes">
+                    <el-input v-model="newBookmark.notes" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="Type">
                     <el-switch v-model="isPublic" on-color="#13ce66" off-color="#ff4949" on-text="Pub" off-text="Pri" style="width:50px">
@@ -62,6 +93,9 @@
                 </el-form-item>
                 <el-form-item label="Content">
                     <el-input v-model="editBookmark.content" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="Notes">
+                    <el-input v-model="editBookmark.notes" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="Type">
                     <el-switch v-model="isEditPublic" on-color="#13ce66" off-color="#ff4949" on-text="Pub" off-text="Pri" style="width:50px">
@@ -135,8 +169,8 @@
                 }
                 this.isPublic = false;
             },
-            edit(index, bookmarks) {
-                if (this.userId != bookmarks[index].userId) {
+            edit(bookmark) {
+                if (this.userId != bookmark.userId) {
                     this.$notify({
                         title: 'Warning',
                         message: "No Access to modify other's bookmark!",
@@ -144,14 +178,14 @@
                     });
                 } else {
                     this.editBookmarkVisible = true;
-                    this.editBookmark = bookmarks[index];
+                    this.editBookmark = bookmark;
                     this.isEditPublic = ((this.editBookmark.type == "private") ? false : true);
                 }
 
             },
             editBookmarkInfo() {//put bookmark info
                 this.$store.dispatch('editBookmark', this.editBookmark);
-                this.editBookmarkVisible=false;
+                this.editBookmarkVisible = false;
             },
             handleCurrentChange(val) {//pagination method
                 this.page.currentPage = val;
@@ -160,9 +194,8 @@
                     skip: this.page.size * (this.page.currentPage - 1)
                 });
             },
-            deleteBookmark(id){
-                console.log(id);
-                this.$store.dispatch('deleteBookmark',id)
+            deleteBookmark(id) {
+                this.$store.dispatch('deleteBookmark', id)
             }
         },
         components: {
@@ -186,5 +219,20 @@
     
     .book_center {
         text-align: center;
+    }
+    
+    .demo-table-expand {
+        font-size: 0;
+    }
+    
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
     }
 </style>

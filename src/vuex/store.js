@@ -157,7 +157,7 @@ export default new Vuex.Store({
         createBookmark({commit, state}, body) {
             return new Promise((resolve, reject) => {
                 return api.CreateBookmark(body).then(success => {
-                    commit('CREATE_BOOKMARK_SUCCESS', body);
+                    commit('CREATE_BOOKMARK_SUCCESS', success.body);
                     resolve(success);
                 }, error => reject(error));
             })
@@ -181,9 +181,9 @@ export default new Vuex.Store({
         deleteBookmark({commit, state}, id) {
             return new Promise((resolve, reject) => {
                 return api.DeleteBookmark(id).then(success => {
-                    commit('DELETE_BOOKMARK_SUCCESS',id);
+                    commit('DELETE_BOOKMARK_SUCCESS', id);
                     resolve(success);
-                },error=>reject(error));
+                }, error => reject(error));
             })
         }
     },

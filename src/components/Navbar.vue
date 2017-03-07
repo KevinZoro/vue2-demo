@@ -12,21 +12,21 @@
 
 <script>
     export default {
-        name:"navbar",
+        name: "navbar",
         data() {
             return {
                 activeIndex: '1',
                 // search:"",
             };
         },
-        computed:{
-            user(){
+        computed: {
+            user() {
                 return this.$store.getters.user;
             },
-            userId(){
+            userId() {
                 return window.localStorage.getItem('userId');
             },
-            token(){
+            token() {
                 return window.localStorage.getItem('token');
             }
         },
@@ -34,17 +34,18 @@
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
             },
-            logout(){
-                this.$store.dispatch('logout').then(success=>this.$router.replace('/login'));
+            logout() {
+                this.$store.dispatch('logout').then(success => this.$router.replace('/login'));
             },
-            getUserInfo(){
-                this.$store.dispatch('getUserInfo',{
-                    id:this.userId
+            getUserInfo() {
+                this.$store.dispatch('getUserInfo', {
+                    id: this.userId
                 })
             }
         },
-        created(){
-             this.getUserInfo();  
+        created() {
+            this.getUserInfo();
         }
     }
+
 </script>
