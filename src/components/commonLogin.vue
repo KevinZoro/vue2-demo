@@ -12,6 +12,7 @@
 
 <script>
 import api from '../api'
+import CryptoJS from 'crypto-js'
 export default {
   name: 'commonLogin',
   props:["isLogin"],
@@ -22,6 +23,11 @@ export default {
       username:""
     }
   },
+  computed:{
+    hashPassword(){
+        return CryptoJS.HmacSHA1(this.password,'mobilenow').toString(CryptoJS.enc.Base64);
+    }
+  },
   methods:{
     redirect(isLogin){
         this.$router.replace({path:(isLogin?'/signup':'/login')})
@@ -29,7 +35,7 @@ export default {
     login(){
         this.$store.dispatch('login',{
             email:this.email,
-            password:this.password
+            password:this.hashPassword
         }).then(response=>{
             this.$router.replace('/Home');
         })
@@ -37,7 +43,7 @@ export default {
     signup(){
         this.$store.dispatch('signup',{
             email:this.email,
-            password:this.password,
+            password:this.hashPassword,
             username:this.username
         }).then(success=>{
             setTimeout(()=>{

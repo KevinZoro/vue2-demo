@@ -2,9 +2,9 @@
     <div id="navbar">
         <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
             <el-menu-item index="1">{{user.username}}'s Bookmarks</el-menu-item>
-            <el-menu-item index="6" style="float:right;"><a href="javascript:void(0)" v-on:click="logout">登出</a></el-menu-item>
+            <el-menu-item index="6" style="float:right;"><a href="javascript:void(0)" v-on:click="logout">Logout</a></el-menu-item>
             <el-menu-item index="5" style="float:right;">{{user.username}}</el-menu-item>
-            <el-menu-item index="4" style="float:right;"><el-input v-model="search" placeholder="搜索" icon="search"></el-input></el-menu-item>
+            <!--<el-menu-item index="4" style="float:right;"><el-input v-model="search" placeholder="Search" icon="search"></el-input></el-menu-item>-->
             <div class="line"></div>
         </el-menu>
     </div>
@@ -16,7 +16,7 @@
         data() {
             return {
                 activeIndex: '1',
-                search:"",
+                // search:"",
             };
         },
         computed:{

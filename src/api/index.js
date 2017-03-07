@@ -9,6 +9,7 @@ const hostUrl="http://0.0.0.0:3000"
 function api(){}
 Vue.http.interceptors.push(function(request, next) {
     // modify headers
+    if(!request.params) request.params={};
   request.params.access_token=window.localStorage.getItem('token');
 
   // continue to next interceptor
@@ -38,14 +39,17 @@ api.GetUserInfo=function(userId){
     return Vue.http.get(hostUrl+'/api/Users/'+userId)
 }
 api.GetBookmarks=function(params){
-    return Vue.http.get(hostUrl+'/api/bookmarks/list',params)
+    return Vue.http.get(hostUrl+'/api/bookmarks/list',{params})
 }
 api.CreateBookmark=function(body){
     body.userId=window.localStorage.getItem('userId');
     return Vue.http.post(hostUrl+'/api/bookmarks',body);
 }
-api.GetBookmarksCount=function(){
-    return Vue.http.get(hostUrl+'/api/bookmarks/count')
+api.GetBookmarksCount=function(params){
+    return Vue.http.get(hostUrl+'/api/bookmarks/list/count',{params})
+}
+api.EditBookmark=function(body){
+    return Vue.http.put(hostUrl+'/api/bookmarks/'+body.id,body);
 }
 export default api;
 

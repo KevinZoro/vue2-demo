@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import api from '../api'
 import moment from 'moment'
 import { Notification } from 'element-ui'
+import _ from 'lodash'
 
 Vue.use(Vuex)
 
@@ -28,7 +29,8 @@ export default new Vuex.Store({
             token:"",
             username:""
         },//user info
-        bookmarks:[]
+        bookmarks:[],
+        bookmarkCount:0
     },
     mutations:{
         USER_LOGIN(state,body){
@@ -49,7 +51,7 @@ export default new Vuex.Store({
             __noticeError("注册失败")
         },
         GET_USER_INFO(state,results){
-            state.user.username=results.username;
+            state.user = results;
         },
         GET_USER_INFO_ERROR(state){
             __noticeError("获取用户信息失败")
@@ -75,7 +77,18 @@ export default new Vuex.Store({
         },
         CREATE_BOOKMARK_SUCCESS(state,bookmark){
             bookmark.createTime = moment().format('YYYY-MM-DD HH:mm:ss');
-            state.bookmarks.push(bookmark);
+            state.bookmarks=[bookmark].concat(state.bookmarks);
+        },
+        GET_BOOKMARK_COUNT(state,data){
+            state.bookmarkCount=data.count;
+        },
+        EDIT_BOOKMARK_SUCCESS(state,bookmark){
+            state.bookmarks = _.map(state.bookmarks,item=>{
+                if(item.id==bookmark.id){
+                    item = bookmark;
+                }
+                return item;
+            })
         }
     },
     actions:{
@@ -124,8 +137,8 @@ export default new Vuex.Store({
             })
         },
         getBookmarks({commit,state},params){
+            // console.log(params);
             return new Promise((resolve,reject)=>{
-                params.access_token=window.localStorage.getItem('token');
                 return api.GetBookmarks(params).then(success=>{
                     commit('GET_BOOKMARK_LIST',success.body);
                     resolve(success);
@@ -139,11 +152,28 @@ export default new Vuex.Store({
                     resolve(success);
                 },error=>reject(error));
             })
+        },
+        getBookmarkCount({commit,state},params){//TODO
+            return new Promise((resolve,reject)=>{
+                return api.GetBookmarksCount(params).then(success=>{
+                    commit('GET_BOOKMARK_COUNT',success.body);
+                    resolve(success);
+                },error=>reject(error));
+            })
+        },
+        editBookmark({commit,state},body){
+            return new Promise((resolve,reject)=>{
+                return api.EditBookmark(body).then(success=>{
+                    commit('EDIT_BOOKMARK_SUCCESS',success.body);
+                    resolve(success);
+                },error=>reject(error));
+            })
         }
     },
     getters:{
         user:state=>state.user,
         token:state=>window.localStorage.getItem('token'),
-        bookmarks:state=>state.bookmarks
+        bookmarks:state=>state.bookmarks,
+        bookmarkCount:state=>state.bookmarkCount
     }
 })
