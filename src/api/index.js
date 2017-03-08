@@ -14,7 +14,7 @@ Vue.http.interceptors.push(function (request, next) {
 
     // continue to next interceptor
     next(function (response) {
-        if (response.status == '401' && (response.url.indexOf('/api/login') == -1) && (response.url.indexOf('/api/signup') == -1)) {
+        if (response.status == '401' && (response.url.indexOf('/api/cmsUsers/login') == -1) && (response.url.indexOf('/api/cmsUsers/signup') == -1)) {
             //   console.log("bad")
             Notification.error({
                 message: "未登录或token失效",
@@ -31,16 +31,16 @@ Vue.http.interceptors.push(function (request, next) {
 });
 
 api.Signup = function (body) {
-    return Vue.http.post(hostUrl + '/api/Users', body)
+    return Vue.http.post(hostUrl + '/api/cmsUsers', body)
 }
 api.UserLogin = function (body) {
-    return Vue.http.post(hostUrl + '/api/Users/login', body);
+    return Vue.http.post(hostUrl + '/api/cmsUsers/login', body);
 }
 api.Logout = function () {
-    return Vue.http.post(hostUrl + '/api/Users/logout');
+    return Vue.http.post(hostUrl + '/api/cmsUsers/logout');
 }
 api.GetUserInfo = function (userId) {
-    return Vue.http.get(hostUrl + '/api/Users/' + userId)
+    return Vue.http.get(hostUrl + '/api/cmsUsers/' + userId)
 }
 api.GetBookmarks = function (params) {
     return Vue.http.get(hostUrl + '/api/bookmarks/list', { params })

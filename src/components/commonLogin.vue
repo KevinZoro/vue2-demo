@@ -2,11 +2,11 @@
     <div id="commonLogin">
         <h1 style="color:#20A0FF">BookMark</h1>
         <!--<img src="../assets/logo.png" alt="">-->
-        <el-input v-model="email" placeholder="请输入邮箱地址"></el-input>
-        <el-input v-model="username" placeholder="请输入用户名" v-show="!isLogin"></el-input>
-        <el-input v-model="password" placeholder="请输入密码" type="password"></el-input>
-        <el-button v-on:click="userLogin(isLogin)" type="primary">{{isLogin?"登录":"注册"}}</el-button>
-        <el-button v-on:click="redirect(isLogin)">{{isLogin?"注册":"登录"}}</el-button>
+        <el-input v-model="email" placeholder="Email address"></el-input>
+        <el-input v-model="username" placeholder="Username" v-show="!isLogin"></el-input>
+        <el-input v-model="password" placeholder="Password" type="password"></el-input>
+        <el-button v-on:click="userLogin(isLogin)" type="primary">{{isLogin?"SignIn":"SignUp"}}</el-button>
+        <el-button v-on:click="redirect(isLogin)">{{isLogin?"SignUp":"SignIn"}}</el-button>
     </div>
 </template>
 
@@ -60,11 +60,11 @@
             },
             userLogin(isLogin) {
                 if (this.email.length == 0 || this.password.length == 0) {
-                    this.showWarningTips("请输入邮箱和密码");
+                    this.showWarningTips("Please enter the email and password");
                 } else if (!isLogin && this.username.length == 0) {
-                    this.showWarningTips("请输入用户名");
+                    this.showWarningTips("Please enter the username");
                 } else if (this.password.length < 8) {
-                    this.showWarningTips("密码长度不能小于8");
+                    this.showWarningTips("The password's length must be more than 8");
                 } else {
                     if (isLogin) {
                         this.login();

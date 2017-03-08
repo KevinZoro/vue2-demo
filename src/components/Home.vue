@@ -36,8 +36,11 @@
                             <el-form-item label="CreateTime">
                                 <span>{{ props.row.createTime }}</span>
                             </el-form-item>
-                            <el-form-item label="Owner">
+                            <el-form-item label="OwnerID">
                                 <span>{{ props.row.userId }}</span>
+                            </el-form-item>
+                            <el-form-item label="Owner">
+                                <span>{{ props.row.bookmarkUser.username }}</span>
                             </el-form-item>
                             <el-form-item label="Type">
                                 <span>{{ props.row.type }}</span>
@@ -52,6 +55,7 @@
                 <el-table-column prop="name" label="Name" width="120"></el-table-column>
                 <el-table-column prop="content" label="Contents"></el-table-column>
                 <el-table-column prop="type" label="Type"></el-table-column>
+                <el-table-column prop="bookmarkUser.username" label="Owner"></el-table-column>
                 <el-table-column label="Operations">
                     <template scope="scope">
                         <el-button @click="edit(scope.row)" type="text" size="small" v-show="scope.row.userId==userId">Edit</el-button>
@@ -195,7 +199,16 @@
                 });
             },
             deleteBookmark(id) {
-                this.$store.dispatch('deleteBookmark', id)
+                this.$confirm('Are you sure to delete this?', 'Notice', {
+                    confirmButtonText: 'Yes',
+                    cancelButtonText:'No',
+                    type:"warning"
+                }).then(()=>{
+                    this.$store.dispatch('deleteBookmark',id);
+                }).catch(()=>{
+
+                })
+                
             }
         },
         components: {

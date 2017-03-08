@@ -38,23 +38,23 @@ export default new Vuex.Store({
             window.localStorage.setItem('token', body.id)
             window.localStorage.setItem('token_expired', new Date(body.created).getTime() + (body.ttl) * 1000);
             window.localStorage.setItem('userId', body.userId);
-            __noticeSuccess("登录成功")
+            __noticeSuccess("SignIn successfully")
         },
         USER_LOGIN_ERROR(state) {
-            __noticeError("登录失败")
+            __noticeError("SignIn failed")
         },
         USER_SIGNUP(state, body) {
             state.user = body;
-            __noticeSuccess("注册成功")
+            __noticeSuccess("SignUp successfully")
         },
         USER_SIGNUP_ERROR(state) {
-            __noticeError("注册失败")
+            __noticeError("SignUp failed")
         },
         GET_USER_INFO(state, results) {
             state.user = results;
         },
         GET_USER_INFO_ERROR(state) {
-            __noticeError("获取用户信息失败")
+            __noticeError("failed to get user infomation")
         },
         USER_LOGOUT(state) {
             state.user = {
@@ -76,7 +76,10 @@ export default new Vuex.Store({
             state.bookmarks = body.list;
         },
         CREATE_BOOKMARK_SUCCESS(state, bookmark) {
-            bookmark.createTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            // bookmark.createTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            bookmark.bookmarkUser={
+                username:state.user.username
+            };
             state.bookmarks = [bookmark].concat(state.bookmarks);
             state.bookmarkCount++;
         },
