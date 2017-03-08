@@ -56,6 +56,10 @@ export default new Vuex.Store({
         GET_USER_INFO_ERROR(state) {
             __noticeError("failed to get user infomation")
         },
+        UPDATE_USER_INFO(state, body) {
+            __noticeSuccess("Update settings successfully")
+            state.user = body;
+        },
         USER_LOGOUT(state) {
             state.user = {
                 id: "",
@@ -77,8 +81,8 @@ export default new Vuex.Store({
         },
         CREATE_BOOKMARK_SUCCESS(state, bookmark) {
             // bookmark.createTime = moment().format('YYYY-MM-DD HH:mm:ss');
-            bookmark.bookmarkUser={
-                username:state.user.username
+            bookmark.bookmarkUser = {
+                username: state.user.username
             };
             state.bookmarks = [bookmark].concat(state.bookmarks);
             state.bookmarkCount++;
@@ -89,10 +93,14 @@ export default new Vuex.Store({
         EDIT_BOOKMARK_SUCCESS(state, bookmark) {
             state.bookmarks = _.map(state.bookmarks, item => {
                 if (item.id == bookmark.id) {
+                    bookmark.bookmarkUser = {
+                        username: state.user.username
+                    };
                     item = bookmark;
                 }
                 return item;
             })
+
         },
         DELETE_BOOKMARK_SUCCESS(state, id) {
             state.bookmarks = _.filter(state.bookmarks, item => {
@@ -130,15 +138,22 @@ export default new Vuex.Store({
         },
         getUserInfo({commit, state}, params) {
             return new Promise((resolve, reject) => {
-                api.GetUserInfo(params.id).then(success => {
+                return api.GetUserInfo(params.id).then(success => {
                     commit('GET_USER_INFO', success.body);
                     resolve(success);
                 }, error => {
-                    commit('GET_USER_INFO_ERROR'),
-                        reject(error);
+                    commit('GET_USER_INFO_ERROR');
+                    reject(error);
                 })
             })
-
+        },
+        updateUserInfo({commit, state}, body) {
+            return new Promise((resolve, reject) => {
+                return api.UpdateUserInfo(body.id, body).then(success => {
+                    commit('UPDATE_USER_INFO', success.body);
+                    resolve(success);
+                }, error => reject(error))
+            })
         },
         logout({commit, state}) {
             return new Promise((resolve, reject) => {

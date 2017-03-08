@@ -40,7 +40,10 @@ api.Logout = function () {
     return Vue.http.post(hostUrl + '/api/cmsUsers/logout');
 }
 api.GetUserInfo = function (userId) {
-    return Vue.http.get(hostUrl + '/api/cmsUsers/' + userId)
+    return Vue.http.get(hostUrl + '/api/cmsUsers/' + userId);
+}
+api.UpdateUserInfo = function (userId,body){
+    return Vue.http.put(hostUrl + '/api/cmsUsers/' + userId,body);
 }
 api.GetBookmarks = function (params) {
     return Vue.http.get(hostUrl + '/api/bookmarks/list', { params })
